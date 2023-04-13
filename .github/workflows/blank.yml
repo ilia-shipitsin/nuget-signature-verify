@@ -1,0 +1,18 @@
+name: Test
+on:
+  push
+jobs:
+  test1:
+    name: ${{ matrix.os }}-test
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows-2019, windows-2022 ]
+    steps:
+    - run: |
+        Invoke-WebRequest -Uri https://www.nuget.org/api/v2/package/System.Numerics.Vectors/4.4.0 -OutFile p1.nupkg
+        dotnet nuget verify .\p1.nupkg
+        Invoke-WebRequest -Uri https://www.nuget.org/api/v2/package/runtime.fedora.23-x64.runtime.native.System.Security.Cryptography.OpenSsl/4.3.0 -OutFile p2.nupkg
+        dotnet nuget verify .\p2.nupkg
+      shell: powershell
